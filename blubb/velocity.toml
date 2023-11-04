@@ -51,7 +51,7 @@ kick-existing-players = false
 #                  description and mod list.
 # - "all":         Uses the backend server's response as the proxy response. The Velocity
 #                  configuration is used if no servers could be contacted.
-ping-passthrough = "ENABLED"
+ping-passthrough = "ALL"
 
 [servers]
 	# Configure your servers here. Each key represents the server's name, and the value
