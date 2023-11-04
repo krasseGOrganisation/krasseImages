@@ -19,6 +19,20 @@ spec:
         image: ghcr.io/krassegorganisation/blubb:latest
         ports:
         - containerPort: 25577
+        volumeMounts:
+          - name: mnt
+            mountPath: /mnt
+      initContainers:
+      - name: init-secret-file
+        image: busybox:1.28
+        command: ['sh', '-c', "ls -la /mnt; echo test >> /mnt/test-file"]
+        volumeMounts:
+          - name: mnt
+            mountPath: /mnt
+      volumes:
+      - name: mnt
+        emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
