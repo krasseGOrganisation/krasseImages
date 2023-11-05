@@ -13,6 +13,8 @@ RUN apk add --upgrade --no-cache openssl && \
     adduser -S velocity -G velocity && \
     chown velocity:velocity /data
 
+RUN mkdir -p /opt/velocity && chown velocity:velocity /opt/velocity
+
 USER velocity
 
 VOLUME /data
