@@ -5,7 +5,7 @@ metadata:
   labels:
     app: velocity
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: velocity
@@ -25,14 +25,19 @@ spec:
       initContainers:
       - name: init-secret-file
         image: busybox:1.28
-        command: ['sh', '-c', "ls -la /mnt; echo test >> /mnt/test-file"]
+        env:
+          - name: FORWARDING_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: velocity-secrets
+                key: forwarding-secret
+        command: ['sh', '-c', "ls -la /mnt; echo $FORWARDING_SECRET >> /mnt/forwarding.secret"]
         volumeMounts:
           - name: mnt
             mountPath: /mnt
       volumes:
       - name: mnt
         emptyDir: {}
-
 ---
 apiVersion: v1
 kind: Service
