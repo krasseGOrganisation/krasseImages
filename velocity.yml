@@ -36,12 +36,15 @@ spec:
               secretKeyRef:
                 name: velocity-secrets
                 key: private-key
-        command: [
-          'sh', '-c',
-          "echo files in /mnt; ls -la /mnt",
-          "echo $FORWARDING_SECRET >> /mnt/secrets/forwarding.secret",
-          "echo $PRIVATE_KEY >> /mnt/secrets/private.key"
-        ]
+        command: 
+          - 'sh'
+          - '-c'
+          - |
+            mkdir /mnt/secrets
+            echo $FORWARDING_SECRET >> /mnt/secrets/forwarding.secret
+            echo $PRIVATE_KEY >> /mnt/secrets/private.key
+            echo files in /mnt; ls -la /mnt
+            echo files in /mnt/secrets; ls -la /mnt/secrets
         volumeMounts:
           - name: mnt
             mountPath: /mnt
