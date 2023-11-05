@@ -8,5 +8,5 @@ RUN wget https://github.com/Aelysium-Group/rusty-connector/releases/download/v0.
 RUN mkdir /data/plugins
 RUN mv rusty-connector-*.jar /data/plugins/rusty-connector.jar
 COPY velocity.toml /data
-COPY velocity_config rustyconnector-velocity/
+COPY --chown=velocity:velocity velocity_config  /data/plugins/rustyconnector-velocity/
 RUN ln -s /mnt/secrets/private.key /data/plugins/rustyconnector-velocity/private.key
