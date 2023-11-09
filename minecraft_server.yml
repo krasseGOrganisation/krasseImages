@@ -6,19 +6,46 @@ metadata:
     mcname: lobby
 spec:
   volumes:
-      - name: minecraft-data
-        persistentVolumeClaim:
-          claimName: minecraft-data
+  - name: minecraft-data
+    persistentVolumeClaim:
+      claimName: minecraft-data
+  - name: mnt
+    emptyDir: {}
+  - name: secret-volume
+    secret:
+      secretName: velocity-secrets
   containers:
-    - name: krasserserver
-      image: marctv/minecraft-papermc-server:latest
-      ports:
-        - name: mc-default-port
-          containerPort: 25565
-          protocol: TCP
-      volumeMounts:
-        - mountPath: "/data"
-          name: minecraft-data
+  - name: krasserserver
+    image: marctv/minecraft-papermc-server:latest
+    ports:
+    - name: mc-default-port
+      containerPort: 25565
+      protocol: TCP
+    volumeMounts:
+    - mountPath: "/data"
+      name: minecraft-data
+    - name: mnt
+      mountPath: /mnt
+    tty: true
+    stdin: true
+  
+  initContainers:
+  - name: init-secret-file
+    image: busybox:1.28
+    command: 
+    - 'sh'
+    - '-c'
+    - |
+      mkdir /mnt/secrets
+      cp /mnt/secret-store/forwarding-secret /mnt/secrets/forwarding.secret
+      cp /mnt/secret-store/private-key /mnt/secrets/private.key
+      echo files in /mnt; ls -la /mnt
+      echo files in /mnt/secrets; ls -la /mnt/secrets
+    volumeMounts:
+    - name: mnt
+      mountPath: /mnt
+    - name: secret-volume
+      mountPath: /mnt/secret-store
 
 ---
 apiVersion: v1
@@ -40,10 +67,10 @@ spec:
   selector:
     mcname: lobby
   ports:
-    - name: minecraft
-      targetPort: 25565
-      port: 25565
-      protocol: TCP
+  - name: minecraft
+    targetPort: 25565
+    port: 25565
+    protocol: TCP
 ---
 
 
@@ -56,20 +83,45 @@ metadata:
     mcname: tannenwald
 spec:
   volumes:
-      - name: minecraft-data-2
-        persistentVolumeClaim:
-          claimName: minecraft-data-2
+  - name: minecraft-data-2
+    persistentVolumeClaim:
+      claimName: minecraft-data-2
+  - name: mnt
+    emptyDir: {}
+  - name: secret-volume
+    secret:
+      secretName: velocity-secrets
   containers:
-    - name: krasserserver
-      image: marctv/minecraft-papermc-server:latest
-      ports:
-        - name: mc-default-port
-          containerPort: 25565
-          protocol: TCP
-      volumeMounts:
-        - mountPath: "/data"
-          name: minecraft-data-2
-
+  - name: krasserserver
+    image: marctv/minecraft-papermc-server:latest
+    ports:
+    - name: mc-default-port
+      containerPort: 25565
+      protocol: TCP
+    volumeMounts:
+    - mountPath: "/data"
+      name: minecraft-data-2
+    - name: mnt
+      mountPath: /mnt
+    tty: true
+    stdin: true
+  initContainers:
+  - name: init-secret-file
+    image: busybox:1.28
+    command: 
+    - 'sh'
+    - '-c'
+    - |
+      mkdir /mnt/secrets
+      cp /mnt/secret-store/forwarding-secret /mnt/secrets/forwarding.secret
+      cp /mnt/secret-store/private-key /mnt/secrets/private.key
+      echo files in /mnt; ls -la /mnt
+      echo files in /mnt/secrets; ls -la /mnt/secrets
+    volumeMounts:
+    - name: mnt
+      mountPath: /mnt
+    - name: secret-volume
+      mountPath: /mnt/secret-store
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -77,7 +129,7 @@ metadata:
   name: minecraft-data-2
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 3Gi
@@ -90,7 +142,65 @@ spec:
   selector:
     mcname: tannenwald
   ports:
-    - name: minecraft
-      targetPort: 25565
-      port: 25565
+  - name: minecraft
+    targetPort: 25565
+    port: 25565
+    protocol: TCP
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: krassercontainer-3 # lobby
+  labels:
+    mcname: blaaaa
+spec:
+  volumes:
+  - name: mnt
+    emptyDir: {}
+  - name: secret-volume
+    secret:
+      secretName: velocity-secrets
+  containers:
+  - name: krasserserver
+    image: marctv/minecraft-papermc-server:latest
+    ports:
+    - name: mc-default-port
+      containerPort: 25565
       protocol: TCP
+    volumeMounts:
+    - name: mnt
+      mountPath: /mnt
+    tty: true
+    stdin: true
+  
+  initContainers:
+  - name: init-secret-file
+    image: busybox:1.28
+    command: 
+    - 'sh'
+    - '-c'
+    - |
+      mkdir /mnt/secrets
+      cp /mnt/secret-store/forwarding-secret /mnt/secrets/forwarding.secret
+      cp /mnt/secret-store/private-key /mnt/secrets/private.key
+      echo files in /mnt; ls -la /mnt
+      echo files in /mnt/secrets; ls -la /mnt/secrets
+    volumeMounts:
+    - name: mnt
+      mountPath: /mnt
+    - name: secret-volume
+      mountPath: /mnt/secret-store
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcblaaa
+spec:
+  selector:
+    mcname: blaaaa
+  ports:
+  - name: minecraft
+    targetPort: 25565
+    port: 25565
+    protocol: TCP
+---

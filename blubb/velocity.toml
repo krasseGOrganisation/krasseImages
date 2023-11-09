@@ -74,6 +74,7 @@ enable-player-address-logging = true
 # represents the IP address of the server to connect to.
 lobby = "mclobby.krasser-namespace.svc.cluster.local:25565"
 tannenbaum = "mctannenbaum.krasser-namespace.svc.cluster.local:25565"
+blaaa = "mcblaaa.krasser-namespace.svc.cluster.local:25565"
 
 # In what order we should try servers when a player logs in or is kicked from a server.
 try = [

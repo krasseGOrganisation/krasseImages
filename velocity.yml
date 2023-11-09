@@ -22,35 +22,31 @@ spec:
         volumeMounts:
           - name: mnt
             mountPath: /mnt
+        tty: true
+        stdin: true
       initContainers:
       - name: init-secret-file
         image: busybox:1.28
-        env:
-          - name: FORWARDING_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: velocity-secrets
-                key: forwarding-secret
-          - name: PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                name: velocity-secrets
-                key: private-key
         command: 
           - 'sh'
           - '-c'
           - |
             mkdir /mnt/secrets
-            echo $FORWARDING_SECRET >> /mnt/secrets/forwarding.secret
-            echo $PRIVATE_KEY >> /mnt/secrets/private.key
+            cp /mnt/secret-store/forwarding-secret /mnt/secrets/forwarding.secret
+            cp /mnt/secret-store/private-key /mnt/secrets/private.key
             echo files in /mnt; ls -la /mnt
             echo files in /mnt/secrets; ls -la /mnt/secrets
         volumeMounts:
-          - name: mnt
-            mountPath: /mnt
+        - name: mnt
+          mountPath: /mnt
+        - name: secret-volume
+          mountPath: /mnt/secret-store
       volumes:
       - name: mnt
         emptyDir: {}
+      - name: secret-volume
+        secret:
+          secretName: velocity-secrets
 ---
 apiVersion: v1
 kind: Service
@@ -60,7 +56,7 @@ spec:
   selector:
     app: velocity
   ports:
-    - name: velocity
-      targetPort: 25577
-      port: 25577
-      protocol: TCP
+  - name: velocity
+    targetPort: 25577
+    port: 25577
+    protocol: TCP
