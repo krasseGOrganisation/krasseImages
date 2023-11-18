@@ -25,8 +25,9 @@ RUN wget https://api.papermc.io/v2/projects/velocity/versions/3.2.0-SNAPSHOT/bui
 RUN mv velocity-*.jar /opt/velocity/velocity.jar
 
 RUN wget https://github.com/Aelysium-Group/rusty-connector/releases/download/v0.7.0/rusty-connector-0.7.0.jar
+RUN wget https://mintendo-programmer.de/files/plugins/krasserVelocityManager.jar
 RUN mkdir /data/plugins
-#RUN mv rusty-connector-*.jar /data/plugins/rusty-connector.jar
+RUN mv krasserVelocityManager.jar /data/plugins/krasserVelocityManager.jar
 COPY velocity.toml /data
 COPY --chown=velocity:velocity velocity_config  /data/plugins/rustyconnector-velocity/
 RUN ln -s /mnt/secrets/private.key /data/plugins/rustyconnector-velocity/private.key
