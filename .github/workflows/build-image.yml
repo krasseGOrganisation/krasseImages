@@ -37,4 +37,9 @@ jobs:
         run: |
           docker build blubb -t ${{env.REGISTRY}}/krassegorganisation/blubb:latest
           docker push ${{env.REGISTRY}}/krassegorganisation/blubb:latest
-          
+      
+      - name: Build and push Paper image
+        run: |
+          docker build paper -t ${{env.REGISTRY}}/krassegorganisation/paper:latest
+          docker push ${{env.REGISTRY}}/krassegorganisation/paper:latest
+        
