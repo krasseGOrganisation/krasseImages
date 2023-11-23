@@ -42,4 +42,9 @@ jobs:
         run: |
           docker build paper -t ${{env.REGISTRY}}/krassegorganisation/paper:latest
           docker push ${{env.REGISTRY}}/krassegorganisation/paper:latest
+
+      - name: Build and push FiveM image
+        run: |
+          docker build fivem -t ${{env.REGISTRY}}/krassegorganisation/fivem:latest
+          docker push ${{env.REGISTRY}}/krassegorganisation/fivem:latest
         
