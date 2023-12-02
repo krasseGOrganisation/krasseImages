@@ -43,6 +43,11 @@ jobs:
           docker build paper -t ${{env.REGISTRY}}/krassegorganisation/paper:latest
           docker push ${{env.REGISTRY}}/krassegorganisation/paper:latest
 
+      - name: Frontend nginx
+        run: |
+          docker build frontend-nginx -t ${{env.REGISTRY}}/krassegorganisation/frontend-nginx:latest
+          docker push ${{env.REGISTRY}}/krassegorganisation/frontend-nginx:latest
+      
       - name: Build and push FiveM image
         run: |
           docker build fivem -t ${{env.REGISTRY}}/krassegorganisation/fivem:latest
