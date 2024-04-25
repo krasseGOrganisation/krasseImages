@@ -35,6 +35,11 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          docker build sample-api -t ${{env.REGISTRY}}/krassegorganisation/sample-api:latest
+          docker push ${{env.REGISTRY}}/krassegorganisation/sample-api:latest
+
+      - name: Build and push Docker image
+        run: |
           docker build blubb -t ${{env.REGISTRY}}/krassegorganisation/blubb:latest
           docker push ${{env.REGISTRY}}/krassegorganisation/blubb:latest
       
